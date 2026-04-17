@@ -1,0 +1,202 @@
+/* ============================================
+   INDEX.CSS - Login & Profile Selection Page
+   ============================================ */
+
+.login-page {
+  background: var(--bg-secondary);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 40px 32px 32px;
+  width: 100%;
+  max-width: 480px;
+  animation: slideUp 0.3s ease;
+}
+
+/* ===== LOGO ===== */
+.login-logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.messenger-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 12px;
+}
+
+.messenger-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.login-logo h1 {
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--msg-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.login-subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* ===== PROFILES GRID ===== */
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+  min-height: 0;
+}
+
+.profile-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 2px solid transparent;
+  position: relative;
+  animation: fadeIn 0.2s ease;
+}
+
+.profile-card:hover {
+  background: var(--bg-hover);
+  border-color: var(--msg-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-card:active {
+  transform: scale(0.97);
+}
+
+.profile-card-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--msg-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.profile-card-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.profile-card-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.15);
+  color: var(--text-secondary);
+  font-size: 14px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  line-height: 1;
+}
+
+.profile-card:hover .profile-card-delete {
+  display: flex;
+}
+
+.profile-card-delete:hover {
+  background: rgba(220, 50, 50, 0.8);
+  color: white;
+}
+
+/* ===== CREATE PROFILE BUTTON ===== */
+.btn-create-profile {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--msg-blue-light);
+  color: var(--msg-blue);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px dashed var(--msg-blue);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-create-profile:hover {
+  background: var(--msg-blue);
+  color: white;
+  border-style: solid;
+  transform: translateY(-1px);
+}
+
+.plus-icon {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* ===== EMPTY STATE ===== */
+.profiles-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 20px 0;
+  font-size: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 520px) {
+  .login-container {
+    margin: 16px;
+    padding: 28px 20px 24px;
+    border-radius: var(--radius-md);
+    box-shadow: none;
+    background: var(--bg-primary);
+  }
+
+  .profiles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}

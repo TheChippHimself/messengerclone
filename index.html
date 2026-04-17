@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messenger</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+<body class="login-page">
+
+  <!-- SPLASH / PROFILE SELECTION SCREEN -->
+  <div id="app">
+
+    <!-- Profile Selection View -->
+    <div id="profileSelectView" class="view active">
+      <div class="login-container">
+        <div class="login-logo">
+          <div class="messenger-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 4C12.954 4 4 12.506 4 23c0 5.747 2.706 10.87 6.963 14.354V44l6.546-3.604C19.48 41.115 21.695 41.4 24 41.4c11.046 0 20-8.506 20-18.4S35.046 4 24 4z" fill="url(#msgGrad)"/>
+              <path d="M10.5 29.5L19 20.5l6.5 6.5 8.5-6.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs>
+                <linearGradient id="msgGrad" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#00B2FF"/>
+                  <stop offset="100%" stop-color="#006AFF"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h1>Messenger</h1>
+          <p class="login-subtitle">Choose a profile or create a new one</p>
+        </div>
+
+        <div id="profilesList" class="profiles-grid"></div>
+
+        <button id="createProfileBtn" class="btn-create-profile">
+          <span class="plus-icon">+</span>
+          Create new profile
+        </button>
+      </div>
+    </div>
+
+    <!-- Create Profile Modal -->
+    <div id="createProfileModal" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Create Profile</h2>
+          <button class="modal-close" id="closeCreateModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="avatar-upload-section">
+            <div class="avatar-preview" id="createAvatarPreview">
+              <span id="createAvatarInitial">?</span>
+              <img id="createAvatarImg" class="hidden" />
+            </div>
+            <label class="avatar-upload-label" for="createAvatarInput">
+              Change photo
+            </label>
+            <input type="file" id="createAvatarInput" accept="image/*" class="hidden-input" />
+          </div>
+          <div class="form-group">
+            <label for="createProfileName">Your name</label>
+            <input type="text" id="createProfileName" placeholder="Enter your name" maxlength="30" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" id="cancelCreateProfile">Cancel</button>
+          <button class="btn-primary" id="saveCreateProfile">Create Profile</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>

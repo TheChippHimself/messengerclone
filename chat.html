@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messenger</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/chat.css" />
+</head>
+<body class="chat-page">
+
+<div id="app" class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-profile" id="sidebarProfile">
+        <div class="user-avatar small" id="sidebarAvatar"></div>
+        <span id="sidebarUsername">You</span>
+      </div>
+      <div class="sidebar-actions">
+        <button class="icon-btn" id="newChatBtn" title="New message">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="logoutBtn" title="Switch profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-search">
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="searchChats" placeholder="Search Messenger" />
+      </div>
+    </div>
+
+    <div class="conversations-list" id="conversationsList">
+      <div class="empty-conversations" id="emptyConversations">
+        <p>No conversations yet</p>
+        <button class="btn-start-chat" id="startFirstChat">Start a new chat</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CHAT AREA -->
+  <main class="chat-main" id="chatMain">
+
+    <!-- Empty state -->
+    <div class="chat-empty-state" id="chatEmptyState">
+      <div class="empty-icon">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+          <path d="M24 4C12.954 4 4 12.506 4 23c0 5.747 2.706 10.87 6.963 14.354V44l6.546-3.604C19.48 41.115 21.695 41.4 24 41.4c11.046 0 20-8.506 20-18.4S35.046 4 24 4z" fill="url(#emptyGrad)"/>
+          <path d="M10.5 29.5L19 20.5l6.5 6.5 8.5-6.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="emptyGrad" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#00B2FF"/>
+              <stop offset="100%" stop-color="#006AFF"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h2>Your Messages</h2>
+      <p>Send private photos and messages to a friend or group.</p>
+      <button class="btn-primary" id="emptyNewChat">Send message</button>
+    </div>
+
+    <!-- Active Chat -->
+    <div class="chat-window hidden" id="chatWindow">
+
+      <!-- Chat Header -->
+      <div class="chat-header" id="chatHeader">
+        <button class="back-btn" id="backBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M19 12H5M5 12l7-7M5 12l7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="chat-header-avatar" id="chatHeaderAvatar"></div>
+        <div class="chat-header-info">
+          <h3 id="chatHeaderName">Name</h3>
+          <span class="online-status">Active now</span>
+        </div>
+        <div class="chat-header-actions">
+          <button class="icon-btn" id="exportChatBtn" title="Export chat">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="icon-btn" id="importChatBtn" title="Import chat">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="icon-btn toggle-dark" id="darkModeBtn" title="Toggle dark mode">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <input type="file" id="importFileInput" accept=".json" class="hidden-input" />
+      </div>
+
+      <!-- Messages Area -->
+      <div class="messages-area" id="messagesArea">
+        <div class="messages-inner" id="messagesInner">
+          <!-- messages rendered here -->
+        </div>
+      </div>
+
+      <!-- Image Preview Bar -->
+      <div class="image-preview-bar hidden" id="imagePreviewBar">
+        <div class="preview-content">
+          <img id="previewImg" src="" alt="preview" />
+          <button class="remove-preview" id="removePreview">&times;</button>
+        </div>
+        <span id="previewFilename">image.jpg</span>
+      </div>
+
+      <!-- Chat Input -->
+      <div class="chat-input-area" id="chatInputArea">
+        <div class="input-actions-left">
+          <label class="icon-btn" for="imageUploadInput" title="Send image">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+              <path d="M21 15l-5-5L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </label>
+          <input type="file" id="imageUploadInput" accept="image/*" class="hidden-input" />
+        </div>
+        <div class="message-input-wrap" id="messageInputWrap">
+          <textarea
+            id="messageInput"
+            placeholder="Aa"
+            rows="1"
+            maxlength="5000"
+          ></textarea>
+        </div>
+        <button class="send-btn" id="sendBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- New Chat Modal -->
+<div id="newChatModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>New Message</h2>
+      <button class="modal-close" id="closeNewChatModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="avatar-upload-section">
+        <div class="avatar-preview" id="chatAvatarPreview">
+          <span id="chatAvatarInitial">?</span>
+          <img id="chatAvatarImg" class="hidden" />
+        </div>
+        <label class="avatar-upload-label" for="chatAvatarInput">
+          Add photo
+        </label>
+        <input type="file" id="chatAvatarInput" accept="image/*" class="hidden-input" />
+      </div>
+      <div class="form-group">
+        <label for="chatPersonName">Contact name</label>
+        <input type="text" id="chatPersonName" placeholder="Enter name" maxlength="30" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="cancelNewChat">Cancel</button>
+      <button class="btn-primary" id="saveNewChat">Create Chat</button>
+    </div>
+  </div>
+</div>
+
+<!-- Image Zoom Modal -->
+<div id="imageZoomModal" class="modal-overlay hidden image-zoom-overlay">
+  <div class="image-zoom-container">
+    <button class="zoom-close" id="zoomClose">&times;</button>
+    <img id="zoomedImage" src="" alt="Full size" />
+  </div>
+</div>
+
+<!-- Context Menu -->
+<div id="contextMenu" class="context-menu hidden">
+  <button class="context-item" id="ctxDelete">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Delete message
+  </button>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/chat.js"></script>
+</body>
+</html>
