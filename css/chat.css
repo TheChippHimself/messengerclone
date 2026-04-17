@@ -453,6 +453,29 @@ body.dark .conversation-item.active {
   user-select: text;
 }
 
+.msg-bubble-wrap {
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+}
+
+.msg-time {
+  font-size: 11px;
+  color: #65676B;
+  margin-top: 2px;
+  opacity: 0.8;
+}
+
+/* Sender (right side) */
+.msg-group.sender .msg-bubble-wrap {
+  align-items: flex-end;
+}
+
+/* Receiver (left side) */
+.msg-group.receiver .msg-bubble-wrap {
+  align-items: flex-start;
+}
+
 /* Sender bubble */
 .msg-group.sender .msg-bubble {
   background: var(--bubble-sender);
