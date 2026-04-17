@@ -262,20 +262,23 @@
     // Seen status for last sent message
     const lastSentMsg = [...messages].reverse().find(m => m.sender === 'me');
     if (lastSentMsg && lastSentMsg.seen) {
-      appendSeenStatus(conv);
+      appendSeenStatus(conv, lastSentMsg.seenAt || lastSentMsg.timestamp);
     }
   }
 
   function createMessageRow(msg, conv, isLast, allMsgs, idx) {
     const isSender = msg.sender === 'me';
+
+    // Determine position within group for timestamp rules
+    const nextMsg = allMsgs[idx + 1];
+    const isLastInGroup = !nextMsg || nextMsg.sender !== msg.sender;
+
     const row = document.createElement('div');
     row.className = 'msg-row';
     row.dataset.msgId = msg.id;
 
-    // Receiver avatar (only for last in group)
+    // Receiver avatar — visible only on last message in group
     if (!isSender) {
-      const nextMsg = allMsgs[idx + 1];
-      const isLastInGroup = !nextMsg || nextMsg.sender !== msg.sender;
       const avatarEl = document.createElement('div');
       avatarEl.className = 'msg-avatar' + (isLastInGroup ? '' : ' hidden-avatar');
       if (conv.avatar) {
@@ -289,6 +292,10 @@
       row.appendChild(avatarEl);
     }
 
+    // Bubble wrapper (holds bubble + timestamp together for alignment)
+    const bubbleWrap = document.createElement('div');
+    bubbleWrap.className = 'msg-bubble-wrap';
+
     // Bubble
     const bubble = document.createElement('div');
     bubble.className = 'msg-bubble';
@@ -300,13 +307,14 @@
       img.src = msg.content;
       img.alt = 'Image';
       img.loading = 'lazy';
+      // Images: click = zoom (not timestamp toggle)
       img.addEventListener('click', () => openImageZoom(msg.content));
       bubble.appendChild(img);
     } else {
       bubble.textContent = msg.content;
     }
 
-    // Reaction
+    // Reaction badge
     if (msg.reaction) {
       const reactionEl = document.createElement('div');
       reactionEl.className = 'msg-reaction';
@@ -320,11 +328,54 @@
       showContextMenu(e.clientX, e.clientY, msg.id);
     });
 
-    row.appendChild(bubble);
+    // ── TIMESTAMP LOGIC ──
+    // Only the LAST message in a group gets the hover-reveal timestamp.
+    // Earlier messages in the group are timestamp-less (matches Messenger exactly).
+    if (isLastInGroup) {
+      const timeEl = document.createElement('div');
+      timeEl.className = 'msg-time';
+      timeEl.textContent = Utils.formatMessageTime(msg.timestamp);
+      // Full timestamp revealed on click (toggled)
+      timeEl.dataset.short = Utils.formatMessageTime(msg.timestamp);
+      timeEl.dataset.full  = Utils.formatFullTimestamp(msg.timestamp);
+      bubbleWrap.appendChild(bubble);
+      bubbleWrap.appendChild(timeEl);
+    } else {
+      bubbleWrap.appendChild(bubble);
+    }
+
+    // Click on bubble = toggle full/short timestamp on the group's time label
+    // Find the closest group and toggle its last .msg-time
+    bubble.addEventListener('click', (e) => {
+      if (msg.type === 'image') return; // images use zoom instead
+      toggleTimestampInGroup(bubble);
+    });
+
+    row.appendChild(bubbleWrap);
     return row;
   }
 
-  function appendSeenStatus(conv) {
+  // Toggle between short ("2:45 PM") and full ("April 18, 2026 at 2:45 PM")
+  // on the .msg-time of the clicked bubble's group
+  function toggleTimestampInGroup(bubble) {
+    // Walk up to msg-group, find its last .msg-time
+    const group = bubble.closest('.msg-group');
+    if (!group) return;
+    const timeEl = group.querySelector('.msg-row:last-child .msg-time');
+    if (!timeEl) return;
+
+    if (timeEl.dataset.expanded === 'true') {
+      timeEl.textContent = timeEl.dataset.short;
+      timeEl.dataset.expanded = 'false';
+      timeEl.classList.remove('msg-time--expanded');
+    } else {
+      timeEl.textContent = timeEl.dataset.full;
+      timeEl.dataset.expanded = 'true';
+      timeEl.classList.add('msg-time--expanded');
+    }
+  }
+
+  function appendSeenStatus(conv, seenAt) {
     const seenEl = document.createElement('div');
     seenEl.className = 'seen-status';
     seenEl.id = 'seenStatus';
@@ -340,8 +391,13 @@
       avatarEl.textContent = Utils.getInitials(conv.name);
     }
 
+    // "Seen" or "Seen at 2:45 PM"
+    const label = seenAt
+      ? `Seen at ${Utils.formatMessageTime(seenAt)}`
+      : 'Seen';
+
     seenEl.appendChild(avatarEl);
-    seenEl.appendChild(document.createTextNode('Seen'));
+    seenEl.appendChild(document.createTextNode(label));
     messagesInner.appendChild(seenEl);
   }
 
@@ -462,7 +518,8 @@
   function simulateReceipt(msgId) {
     // Mark as seen after 1.5s
     setTimeout(() => {
-      Storage.updateMessage(activeProfile.id, activeConvId, msgId, { seen: true });
+      const seenAt = new Date().toISOString();
+      Storage.updateMessage(activeProfile.id, activeConvId, msgId, { seen: true, seenAt });
 
       // Only show seen if this is still the active conv and msg is last
       if (activeConvId) {
@@ -472,7 +529,7 @@
           const oldSeen = document.getElementById('seenStatus');
           if (oldSeen) oldSeen.remove();
           const conv = allConvs.find(c => c.id === activeConvId);
-          if (conv) appendSeenStatus(conv);
+          if (conv) appendSeenStatus(conv, seenAt);
           scrollToBottom(false);
         }
       }
